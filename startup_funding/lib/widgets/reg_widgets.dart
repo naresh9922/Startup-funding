@@ -3,6 +3,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:startup_funding/pages/themepages/technology.dart';
+import 'package:startup_funding/widgets/registration_form_widgets.dart';
 
 class RegistrationWidgets {
   static List themes = [
