@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:startup_funding/pages/registration.dart';
 
@@ -16,33 +17,38 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text("Login"),
-      ),
+      // appBar: AppBar(
+      //   title: const Text("Login"),
+      // ),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 110.0),
+            const Padding(
+              padding: EdgeInsets.only(top: 110.0),
               child: Center(
-                child: Container(
+                child: SizedBox(
                   width: 200,
                   height: 100,
-                  child: Text("StartUp Funding",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25,
-                          color: Colors.purple)),
+                  child: Text(
+                    "StartUp Funding",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
+                      color: Colors.purple,
+                    ),
+                  ),
                 ),
               ),
             ),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
+                keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'email',
-                    hintText: 'Enter valid email id as abc@gmail.com'),
+                  border: OutlineInputBorder(),
+                  labelText: 'Email',
+                  hintText: 'Enter Email Id ',
+                ),
               ),
             ),
             const Padding(
@@ -50,10 +56,11 @@ class _LoginState extends State<Login> {
                   EdgeInsets.only(left: 15.0, right: 15.0, top: 15, bottom: 0),
               child: TextField(
                 obscureText: true,
+                keyboardType: TextInputType.visiblePassword,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Password',
-                    hintText: 'Enter secure password'),
+                    hintText: 'Enter Password'),
               ),
             ),
             const Padding(
@@ -64,7 +71,7 @@ class _LoginState extends State<Login> {
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Profile',
-                  hintText: 'Enter secure password',
+                  hintText: 'Enter Profile ',
                 ),
               ),
             ),
@@ -80,6 +87,7 @@ class _LoginState extends State<Login> {
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     ),
                     onPressed: () {
+                      login();
                       print('Successfully log in ');
                     },
                   ),
@@ -136,5 +144,20 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  Future<void> login() async {
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+    try {
+      await _firestore.collection('your_collection_name').add({
+        'field1': 'value1',
+        'field2': 'value2',
+        // Add more fields as needed
+      });
+      print('Data added successfully!');
+    } catch (e) {
+      print('Error adding data: $e');
+    }
   }
 }

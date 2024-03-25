@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "652958411536",
+    "project_id": "startup-funding-project",
+    "storage_bucket": "startup-funding-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:652958411536:android:58ae737c6c79d53c8ad395",
+        "android_client_info": {
+          "package_name": "com.example.startup_funding"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4sq5nG9BVtLep0nVXnwtj9bZJQfLIIg0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
