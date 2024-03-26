@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:startup_funding/pages/login.dart';
 import 'package:startup_funding/pages/registration.dart';
 import 'home.dart';
@@ -17,17 +18,16 @@ class splash_screen extends StatefulWidget {
 
 class _splash_screenState extends State<splash_screen>
     with SingleTickerProviderStateMixin {
-  @override
+  late bool? loggedIn;
   @override
   void initState() {
     super.initState();
+    loggedIn = isLoggedIn() as bool?;
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     Future.delayed(const Duration(seconds: 5), () {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          // builder: (_) =>  Registration(),
-          builder: (_) => const Login(),
-          // ),
+          builder: (_) => loggedIn! ? const Home() : Login(),
         ),
       );
     });
@@ -65,5 +65,13 @@ class _splash_screenState extends State<splash_screen>
         ],
       ),
     ));
+  }
+
+  Future<bool?> isLoggedIn() async {
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    setState(() {
+      loggedIn = _prefs.getBool('loggedIn');
+    });
+    return loggedIn;
   }
 }

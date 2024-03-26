@@ -4,13 +4,15 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 part 'registration_bloc_event.dart';
 part 'registration_bloc_state.dart';
 
 class RegistrationBloc extends Bloc<RegistrationBlocEvent, RegistrationState> {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
-
+  var uuid = const Uuid().v1();
   RegistrationBloc() : super(RegistrationInitialState()) {
     on<RegistrationInitialEvent>(registrationInitialEvent);
     on<StudentRoleSelectedEvent>(studentRoleSelectedEvent);
@@ -42,15 +44,26 @@ class RegistrationBloc extends Bloc<RegistrationBlocEvent, RegistrationState> {
       Emitter<RegistrationState> emit) async {
     emit(RegistrationInProgressState());
     debugPrint("RegistrationInProgressState ${event.role}");
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
 
     if (event.role == "Mentor") {
+      _prefs.setStringList("userDetails", [
+        uuid,
+        event.data['role'],
+        event.data['name'],
+        event.data['phone'],
+        event.data['email'],
+        event.data['address']
+      ]);
+      _prefs.setBool('loggedIn', true);
       await users.add({
+        'uuid': uuid,
         'role': event.data['role'],
         'name': event.data['name'],
         'phone': event.data['phone'],
         'email': event.data['email'],
         'address': event.data['address'],
-        'passwprd': event.data['password']
+        'password': event.data['password']
       }).then((value) {
         debugPrint(" ${event.role} Added ");
         emit(RegistrationSuccessState());
@@ -61,7 +74,20 @@ class RegistrationBloc extends Bloc<RegistrationBlocEvent, RegistrationState> {
     }
 
     if (event.role == "Investor") {
+      _prefs.setStringList("userDetails", [
+        uuid,
+        event.data['role'],
+        event.data['name'],
+        event.data['phone'],
+        event.data['email'],
+        event.data['address'],
+        event.data['occupation'],
+        event.data['experience']
+      ]);
+      _prefs.setBool('loggedIn', true);
+
       await users.add({
+        'uuid': uuid,
         'role': event.data['role'],
         'name': event.data['name'],
         'phone': event.data['phone'],
@@ -69,7 +95,7 @@ class RegistrationBloc extends Bloc<RegistrationBlocEvent, RegistrationState> {
         'address': event.data['address'],
         'occupation': event.data['occupation'],
         'experience': event.data['experience'],
-        'passwprd': event.data['password']
+        'password': event.data['password']
       }).then((value) {
         debugPrint(" ${event.role} Added ");
         emit(RegistrationSuccessState());
@@ -80,7 +106,18 @@ class RegistrationBloc extends Bloc<RegistrationBlocEvent, RegistrationState> {
     }
 
     if (event.role == "Student") {
+      _prefs.setStringList("userDetails", [
+        uuid,
+        event.data['role'],
+        event.data['name'],
+        event.data['phone'],
+        event.data['email'],
+        event.data['address'],
+        event.data['class']
+      ]);
+      _prefs.setBool('loggedIn', true);
       await users.add({
+        'uuid': uuid,
         'role': event.data['role'],
         'name': event.data['name'],
         'phone': event.data['phone'],
@@ -96,6 +133,7 @@ class RegistrationBloc extends Bloc<RegistrationBlocEvent, RegistrationState> {
         emit(RegistrationFailedState());
       });
     }
+
     emit(RegistrationSuccessState());
   }
 

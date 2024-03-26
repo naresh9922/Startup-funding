@@ -1,344 +1,8 @@
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:flutter_animate/flutter_animate.dart';
-// import 'package:flutter/material.dart';
-
-// class Registration extends StatefulWidget {
-//   const Registration({super.key});
-
-//   @override
-//   State<Registration> createState() => _RegistrationState();
-// }
-
-// const List<String> roles = <String>['Investor', 'Student'];
-
-// class _RegistrationState extends State<Registration> {
-//   TextEditingController nameController = TextEditingController();
-//   TextEditingController emailController = TextEditingController();
-//   TextEditingController addressController = TextEditingController();
-//   TextEditingController mobileController = TextEditingController();
-//   TextEditingController experienceController = TextEditingController();
-//   TextEditingController companyController = TextEditingController();
-//   TextEditingController classController = TextEditingController();
-//   TextEditingController rollnoController = TextEditingController();
-//   TextEditingController passwordController = TextEditingController();
-//   String selectedClass = "";
-//   String selectedRole = "";
-//   final TextEditingController _selectedRole = TextEditingController();
-//   String dropdownValue = roles.first;
-//   bool isStudent = false;
-//   bool isInvestor = false;
-//   bool isMentor = false; // Remove this line
-//   final _formKey = GlobalKey<FormState>();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text("Registration"),
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.only(
-//           left: 16.0,
-//           right: 16,
-//         ),
-//         child: SingleChildScrollView(
-//           child: Column(
-//             children: [
-//               Form(
-//                 key: _formKey,
-//                 child: SingleChildScrollView(
-//                   child: Column(
-//                     children: [
-//                       Container(
-//                         margin: EdgeInsets.only(top: 8),
-//                         child: CustomInput(
-//                           "Full Name",
-//                           nameController,
-//                           TextInputType.name,
-//                         ),
-//                       ),
-//                       const SizedBox(
-//                         height: 20,
-//                       ),
-//                       CustomInput(
-//                         "Email Id",
-//                         emailController,
-//                         TextInputType.emailAddress,
-//                       ),
-//                       const SizedBox(
-//                         height: 20,
-//                       ),
-//                       CustomInput(
-//                         "Phone Number",
-//                         mobileController,
-//                         TextInputType.phone,
-//                       ),
-//                       SizedBox(
-//                         height: 20,
-//                       ),
-//                       Visibility(
-//                         visible: isInvestor || isStudent,
-//                         child: CustomInput(
-//                           "Address",
-//                           addressController,
-//                           TextInputType.streetAddress,
-//                         ),
-//                       ),
-//                       const SizedBox(
-//                         height: 20,
-//                       ),
-//                       CustomDropDown(roles, "Select Role", selectedRole),
-//                       const SizedBox(
-//                         height: 20,
-//                       ),
-//                       // Student's Fieds
-//                       Visibility(
-//                         visible: isStudent,
-//                         child: Column(
-//                           children: [
-//                             Animate(
-//                                 effects: const [
-//                                   FadeEffect(
-//                                     duration: Duration(
-//                                       milliseconds: 300,
-//                                     ),
-//                                     delay: Duration(milliseconds: 100),
-//                                   ),
-//                                   FlipEffect(),
-//                                 ],
-//                                 child: DropdownButtonFormField(
-//                                   items: [
-//                                     'MCA FY',
-//                                     'MCA SY',
-//                                     'MBA FY',
-//                                     'MBA SY'
-//                                   ].map<DropdownMenuItem<String>>(
-//                                       (String value) {
-//                                     return DropdownMenuItem<String>(
-//                                       value: value,
-//                                       child: Text(value),
-//                                     );
-//                                   }).toList(),
-//                                   validator: (value) =>
-//                                       value == null ? 'Select Class ' : null,
-//                                   hint: const Text("Select Class "),
-//                                   decoration: const InputDecoration(
-//                                     border: OutlineInputBorder(),
-//                                   ),
-//                                   onChanged: (String? value) {
-//                                     selectedClass = value!;
-//                                   },
-//                                 )),
-//                             const SizedBox(
-//                               height: 20,
-//                             ),
-//                             StudentsFields()
-//                           ],
-//                         ),
-//                       ),
-//                       // Investor's Fields
-//                       Visibility(
-//                         visible: isInvestor,
-//                         child: InvestorsFields(),
-//                       ),
-//                       SizedBox(
-//                         width: double.infinity,
-//                         child: ElevatedButton(
-//                           style: const ButtonStyle(
-//                               backgroundColor:
-//                                   MaterialStatePropertyAll(Colors.deepPurple)),
-//                           onPressed: () {
-//                             if (_formKey.currentState!.validate()) {
-//                               print("Name = ${nameController.text}");
-//                               print("Email = ${emailController.text}");
-//                               print("Mobile = ${mobileController.text}");
-//                               print("Address = ${addressController.text}");
-//                               print("Class = $selectedClass");
-//                               print("Role = $selectedRole");
-//                               print("Role = ${_selectedRole.text}");
-//                               print("Company = ${companyController.text}");
-//                               print(
-//                                   "Experience = ${experienceController.text}");
-//                               // void createUserCollection() async {
-//                               CollectionReference users = FirebaseFirestore
-//                                   .instance
-//                                   .collection('users');
-
-//                               users
-//                                   .add({
-//                                     'uid': "test",
-//                                     'email': "test",
-//                                   })
-//                                   .then((value) => print("User Added"))
-//                                   .catchError((error) =>
-//                                       print("Failed to add user: $error"));
-//                               // }
-//                             } else {
-//                               // showDialog(
-//                               //   context: context,
-//                               //   builder: (context) {
-//                               //     return AlertDialog(
-//                               //       title: Text("Error "),
-//                               //     );
-//                               //   },
-//                               // );
-//                             }
-//                           },
-//                           child: const Text(
-//                             " Register",
-//                             style: TextStyle(color: Colors.white),
-//                           ),
-//                         ),
-//                       )
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-
-//   Widget CustomDropDown(List list, String hinttext, String selectedRole) {
-//     return Container(
-//       padding: const EdgeInsets.all(0),
-//       width: double.infinity,
-//       child: DropdownButtonFormField(
-//         items: ['Investor', 'Student', 'Mentor']
-//             .map<DropdownMenuItem<String>>((String value) {
-//           return DropdownMenuItem<String>(
-//             value: value,
-//             child: Text(value),
-//           );
-//         }).toList(),
-//         hint: const Text("Select Role "),
-//         decoration: const InputDecoration(border: OutlineInputBorder()),
-//         validator: (value) => value == null ? 'Select Role' : null,
-//         onChanged: (String? value) {
-//           setState(() {
-//             selectedRole = value!;
-//             if (selectedRole == "Student") {
-//               isStudent = !isStudent;
-//             } else {
-//               isStudent = false;
-//             }
-//             if (selectedRole == "Investor") {
-//               isInvestor = !isInvestor;
-//             } else {
-//               isInvestor = false;
-//             }
-//             if (selectedRole == "Mentor") {
-//               isMentor = !isMentor;
-//             } else {
-//               isMentor = false;
-//             }
-//           });
-//         },
-//       ),
-//     );
-//   }
-
-//   Widget CustomInput(String labeltext, TextEditingController controller,
-//       TextInputType textInputType) {
-//     return TextFormField(
-//         decoration: InputDecoration(
-//           border: const OutlineInputBorder(),
-//           labelText: labeltext,
-//         ),
-//         controller: controller,
-//         keyboardType: textInputType,
-//         validator: (value) {
-//           if (value == null || value.isEmpty) {
-//             return 'Please enter Full Name ';
-//           }
-//           return null;
-//         });
-//   }
-
-//   Widget StudentsFields() {
-//     return Column(
-//       children: [
-//         Animate(
-//           effects: const [
-//             FadeEffect(
-//                 duration: Duration(milliseconds: 300),
-//                 delay: Duration(milliseconds: 300)),
-//             FlipEffect(),
-//           ],
-//         ),
-//         Animate(
-//           effects: const [
-//             FadeEffect(
-//                 duration: Duration(milliseconds: 300),
-//                 delay: Duration(milliseconds: 500)),
-//             FlipEffect(),
-//           ],
-//           child: CustomInput(
-//             "Roll Number",
-//             rollnoController,
-//             TextInputType.number,
-//           ),
-//         ),
-//         const SizedBox(
-//           height: 20,
-//         ),
-//       ],
-//     );
-//   }
-
-//   Widget InvestorsFields() {
-//     return Column(
-//       children: [
-//         Animate(
-//           effects: const [
-//             FadeEffect(
-//               duration: Duration(
-//                 milliseconds: 200,
-//               ),
-//               delay: Duration(milliseconds: 100),
-//             ),
-//             FlipEffect(),
-//           ],
-//           child: CustomInput(
-//             "Occupation ",
-//             companyController,
-//             TextInputType.text,
-//           ),
-//         ),
-//         const SizedBox(
-//           height: 20,
-//         ),
-//         Animate(
-//           effects: const [
-//             FadeEffect(
-//               duration: Duration(
-//                 milliseconds: 200,
-//               ),
-//               delay: Duration(milliseconds: 300),
-//             ),
-//             FlipEffect(),
-//           ],
-//           child: CustomInput(
-//             "Experience ",
-//             experienceController,
-//             TextInputType.number,
-//           ),
-//         ),
-//         const SizedBox(
-//           height: 20,
-//         ),
-//       ],
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:startup_funding/bloc/registration_bloc/bloc/registration_bloc_bloc.dart';
-import 'package:startup_funding/widgets/reg_widgets.dart';
 import 'package:startup_funding/widgets/registration_form_widgets.dart';
+
+import '../bloc/registration_bloc/registration_bloc_bloc.dart';
 
 class Registration extends StatefulWidget {
   const Registration({super.key});
@@ -348,21 +12,20 @@ class Registration extends StatefulWidget {
 }
 
 class _RegistrationState extends State<Registration> {
-  RegistrationBloc _registrationBloc = RegistrationBloc();
+  final RegistrationBloc _registrationBloc = RegistrationBloc();
   @override
   void initState() {
-    // TODO: implement initState
     _registrationBloc.add(RegistrationInitialEvent());
     super.initState();
   }
 
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _phoneController = TextEditingController();
-  TextEditingController _experienceController = TextEditingController();
-  TextEditingController _occupationController = TextEditingController();
-  TextEditingController _addressController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _experienceController = TextEditingController();
+  final TextEditingController _occupationController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   String selectedRole = "";
   String selectedClass = "";
   bool isStudent = false;
@@ -386,8 +49,10 @@ class _RegistrationState extends State<Registration> {
             RegistrationFormWidgets().CustomInput('Phone', _phoneController,
                 TextInputType.phone, "Enter Phone Number"),
             Container(
-              margin: EdgeInsets.only(left: 8, right: 8, bottom: 4, top: 5),
-              padding: EdgeInsets.only(left: 8, right: 8, bottom: 4, top: 5),
+              margin:
+                  const EdgeInsets.only(left: 8, right: 8, bottom: 4, top: 5),
+              padding:
+                  const EdgeInsets.only(left: 8, right: 8, bottom: 4, top: 5),
               child: DropdownButtonFormField(
                 items: ['Investor', 'Mentor', 'Student']
                     .map<DropdownMenuItem<String>>((String value) {
@@ -436,9 +101,9 @@ class _RegistrationState extends State<Registration> {
                 if (state is RegistrationInitialState) {
                   return Container(
                     width: double.infinity,
-                    margin: EdgeInsets.all(8),
-                    padding: EdgeInsets.all(8),
-                    child: Column(
+                    margin: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
+                    child: const Column(
                       children: [],
                     ),
                   );
@@ -451,10 +116,10 @@ class _RegistrationState extends State<Registration> {
                         TextInputType.streetAddress,
                         "Enter Address "),
                     Container(
-                      margin:
-                          EdgeInsets.only(left: 8, right: 8, bottom: 4, top: 5),
-                      padding:
-                          EdgeInsets.only(left: 8, right: 8, bottom: 4, top: 5),
+                      margin: const EdgeInsets.only(
+                          left: 8, right: 8, bottom: 4, top: 5),
+                      padding: const EdgeInsets.only(
+                          left: 8, right: 8, bottom: 4, top: 5),
                       child: DropdownButtonFormField(
                         items: ['MCA FY', 'MCA SY', 'MBA FY', 'MBA SY']
                             .map<DropdownMenuItem<String>>((String value) {
@@ -505,7 +170,7 @@ class _RegistrationState extends State<Registration> {
                   );
                 }
                 if (state is RegistrationFailedState) {
-                  return AlertDialog(
+                  return const AlertDialog(
                     title: Text("Something went Wrong !!! "),
                   );
                 }
@@ -529,7 +194,7 @@ class _RegistrationState extends State<Registration> {
                 //     );
                 //   });
                 // }
-                return SizedBox();
+                return const SizedBox();
               },
             ),
             Container(
@@ -541,13 +206,13 @@ class _RegistrationState extends State<Registration> {
                         MaterialStatePropertyAll(Colors.deepPurple)),
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    print("Name = ${_nameController.text}");
-                    print("Email = ${_emailController.text}");
-                    print("Mobile = ${_phoneController.text}");
-                    print("Role = $selectedRole");
-                    print("Class = $selectedClass");
-                    print("Experience = ${_experienceController.text}");
-                    print("Occupation = ${_occupationController.text}");
+                    debugPrint("Name = ${_nameController.text}");
+                    debugPrint("Email = ${_emailController.text}");
+                    debugPrint("Mobile = ${_phoneController.text}");
+                    debugPrint("Role = $selectedRole");
+                    debugPrint("Class = $selectedClass");
+                    debugPrint("Experience = ${_experienceController.text}");
+                    debugPrint("Occupation = ${_occupationController.text}");
                     _registrationBloc
                         .add(RegisterButtonClickedEventEvent(selectedRole, {
                       "name": _nameController.text,
@@ -560,22 +225,6 @@ class _RegistrationState extends State<Registration> {
                       "occupation": _occupationController.text,
                       "experience": _experienceController.text,
                     }));
-                    Future.delayed(
-                        Duration(milliseconds: 800), () => dispose());
-                    // print("Address = ${addressController.text}");
-                    // print("Role = ${_selectedRole.text}");S
-                    // print("Company = ${companyController.text}");
-                    // void createUserCollection() async {
-                    //   CollectionReference users =
-                    //       FirebaseFirestore.instance.collection('users');
-
-                    //   users
-                    //       .add({
-                    //         'uid': "test",
-                    //         'email': "test",
-                    //       })
-                    //       .then((value) => print("User Added"))
-                    //       .catchError((error) => print("Failed to add user: $error"));
                   }
                 },
                 child: const Text(
@@ -592,7 +241,6 @@ class _RegistrationState extends State<Registration> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _addressController.clear();
     _emailController.clear();
     _experienceController.clear();
@@ -600,7 +248,6 @@ class _RegistrationState extends State<Registration> {
     _occupationController.clear();
     _phoneController.clear();
     _passwordController.clear();
-
-    // super.dispose();
+    super.dispose();
   }
 }

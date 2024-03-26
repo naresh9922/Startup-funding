@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 class CreateIdeaTab extends StatefulWidget {
   const CreateIdeaTab({super.key});
@@ -32,6 +34,9 @@ class _CreateIdeaTabState extends State<CreateIdeaTab> {
                   margin: const EdgeInsets.only(bottom: 8),
                   child: TextFormField(
                     controller: _ideaNameController,
+                    validator: (value) => value == null || value.isEmpty
+                        ? 'Enter Idea Name'
+                        : null,
                     keyboardType: TextInputType.text,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -130,21 +135,7 @@ class _CreateIdeaTabState extends State<CreateIdeaTab> {
                     ),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        print("Idea = ${_ideaNameController.text}");
-                        print(
-                            "Problem Statement  = ${_problemStatementController.text}");
-                        print("Partner = ${_partnersController.text}");
-                        print("Theme = $selectedTheme");
-                        print("Description = ${_descriptionController.text}");
-                      } else {
-                        // showDialog(
-                        //   context: context,
-                        //   builder: (context) {
-                        //     return AlertDialog(
-                        //       title: Text("Error "),
-                        //     );
-                        //   },
-                        // );
+                        createIdea();
                       }
                     },
                     child: const Padding(
@@ -162,5 +153,27 @@ class _CreateIdeaTabState extends State<CreateIdeaTab> {
         ),
       ),
     );
+  }
+
+  Future<void> createIdea() async {
+    CollectionReference idea = FirebaseFirestore.instance.collection('ideas');
+    var uuid = const Uuid().v1();
+    try {
+      await idea.add({
+        'uuid': uuid,
+        'ideaName': _ideaNameController.text,
+        'problemStatement': _problemStatementController.text,
+        'partners': _problemStatementController.text,
+        'theme': selectedTheme,
+        'description': _descriptionController.text
+      }).then((value) {
+        debugPrint("Idea Added ");
+      }).catchError((error) {
+        debugPrint("Failed : $error");
+        return error;
+      });
+    } catch (e) {
+      debugPrint("Error  : $e");
+    }
   }
 }

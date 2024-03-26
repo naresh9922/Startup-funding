@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:startup_funding/pages/login.dart';
+import 'package:startup_funding/pages/tabs/blog.dart';
+import 'package:startup_funding/pages/tabs/create_idea_tab.dart';
+import 'package:startup_funding/pages/userProfile.dart';
 import '../widgets/reg_widgets.dart';
 import 'themepages/technology.dart';
 
@@ -23,18 +27,25 @@ class _HomeState extends State<Home> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => TechnologyThemePage(),
+                  builder: (context) => const UserProfile(),
                 ),
               );
             },
             icon: const Icon(Icons.person),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () async {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Login(),
+                ),
+              );
+            },
             icon: const Icon(Icons.logout),
           ),
           PopupMenuButton<String>(
-            onSelected: (value) {},
             itemBuilder: (BuildContext context) {
               return {'Blog', 'Subscribe', 'Create Idea', 'Successful Deals'}
                   .map((String choice) {
@@ -43,6 +54,24 @@ class _HomeState extends State<Home> {
                   child: Text(choice),
                 );
               }).toList();
+            },
+            onSelected: (value) {
+              if (value == "Blog") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const BlogTab(),
+                  ),
+                );
+              }
+              if (value == "Create Idea") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CreateIdeaTab(),
+                  ),
+                );
+              }
             },
           ),
         ],
