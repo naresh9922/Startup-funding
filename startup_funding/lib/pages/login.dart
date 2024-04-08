@@ -1,11 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:startup_funding/pages/home.dart';
 import 'package:startup_funding/pages/registration.dart';
 
 class Login extends StatefulWidget {
-  const Login({super.key});
+  const Login({Key? key}) : super(key: key);
 
   @override
   State<Login> createState() => _LoginState();
@@ -16,13 +16,12 @@ class _LoginState extends State<Login> {
   final TextEditingController _passwordController = TextEditingController();
   String selectedRole = "";
   final _formKey = GlobalKey<FormState>();
+  bool _loginFailed = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      // appBar: AppBar(
-      //   title: const Text("Login"),
-      // ),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -58,6 +57,7 @@ class _LoginState extends State<Login> {
                         }
                         return null;
                       },
+                      enableSuggestions: true,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Email',
@@ -71,6 +71,7 @@ class _LoginState extends State<Login> {
                     child: TextFormField(
                       obscureText: true,
                       controller: _passwordController,
+                      enableSuggestions: true,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "Enter Password";
@@ -114,12 +115,26 @@ class _LoginState extends State<Login> {
                     height: 65,
                     width: 360,
                     child: Container(
+                      decoration: BoxDecoration(
+                        // Set the background color
+                        // Set the background color
+                        borderRadius:
+                            BorderRadius.circular(8), // Set border radius
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.only(top: 20.0),
                         child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors
+                                .deepPurple, // Set transparent background color
+                            shadowColor:
+                                Colors.transparent, // Remove button shadow
+                          ),
                           child: const Text(
                             'Log in ',
-                            style: TextStyle(color: Colors.black, fontSize: 20),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20), // Set text style
                           ),
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
@@ -133,6 +148,11 @@ class _LoginState extends State<Login> {
                 ],
               ),
             ),
+            if (_loginFailed)
+              Text(
+                'No user found',
+                style: TextStyle(color: Colors.red),
+              ),
             const SizedBox(
               height: 50,
             ),
@@ -143,7 +163,6 @@ class _LoginState extends State<Login> {
                     padding: const EdgeInsets.only(left: 40),
                     child: InkWell(
                         onTap: () {
-                          print('hello');
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -153,7 +172,7 @@ class _LoginState extends State<Login> {
                         },
                         child: const Text(
                           'Sign up',
-                          style: TextStyle(fontSize: 14, color: Colors.blue),
+                          style: TextStyle(fontSize: 20, color: Colors.blue),
                         )),
                   ),
                 ]),
@@ -200,6 +219,7 @@ class _LoginState extends State<Login> {
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
         print(" Snapshot ${data}");
         print(" ID ${document.id}");
+        _prefs.setString('profile', data['role']);
         if (data['role'] == "Student") {
           await _prefs.setStringList("userDetails", [
             data['name'],
@@ -215,6 +235,7 @@ class _LoginState extends State<Login> {
             data['name'],
             data['phone'],
             data['email'],
+            data['address'],
             data['uuid'],
           ]);
         }
@@ -230,11 +251,17 @@ class _LoginState extends State<Login> {
           ]);
         }
         _prefs.setBool('loggedIn', true);
+        _prefs.setString('profile', data['role']);
+        _prefs.setString('userUUID', data['uuid']);
       }
+      debugPrint("Logged In ");
       Navigator.pop(context);
       Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
     } else {
-      debugPrint("No User Found ");
+      debugPrint("Invalid Credential ");
+      setState(() {
+        _loginFailed = true;
+      });
     }
   }
 }

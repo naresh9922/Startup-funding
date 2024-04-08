@@ -2,12 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:startup_funding/pages/login.dart';
-import 'package:startup_funding/pages/registration.dart';
 import 'home.dart';
-import 'tabs/blog.dart';
-
-import 'tabs/blog_detail.dart';
-import 'tabs/create_idea_tab.dart';
 
 class splash_screen extends StatefulWidget {
   const splash_screen({super.key});
@@ -18,16 +13,16 @@ class splash_screen extends StatefulWidget {
 
 class _splash_screenState extends State<splash_screen>
     with SingleTickerProviderStateMixin {
-  late bool? loggedIn;
+  bool? loggedIn = false;
   @override
   void initState() {
     super.initState();
-    loggedIn = isLoggedIn() as bool?;
+    getPrefs();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     Future.delayed(const Duration(seconds: 5), () {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (_) => loggedIn! ? const Home() : Login(),
+          builder: (_) => loggedIn! ? const Home() : const Login(),
         ),
       );
     });
@@ -55,7 +50,7 @@ class _splash_screenState extends State<splash_screen>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Welcome to Startup Funding',
+            'Welcome to Startup Hub',
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.white,
@@ -67,11 +62,11 @@ class _splash_screenState extends State<splash_screen>
     ));
   }
 
-  Future<bool?> isLoggedIn() async {
+  Future<void> getPrefs() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     setState(() {
-      loggedIn = _prefs.getBool('loggedIn');
+      loggedIn = _prefs.getBool('loggedIn') ?? false;
+      debugPrint("$loggedIn");
     });
-    return loggedIn;
   }
 }

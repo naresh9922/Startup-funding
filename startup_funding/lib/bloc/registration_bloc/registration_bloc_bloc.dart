@@ -45,11 +45,12 @@ class RegistrationBloc extends Bloc<RegistrationBlocEvent, RegistrationState> {
     emit(RegistrationInProgressState());
     debugPrint("RegistrationInProgressState ${event.role}");
     SharedPreferences _prefs = await SharedPreferences.getInstance();
-
+    _prefs.setString('userUUID', uuid);
+    _prefs.setString('profile', event.role);
     if (event.role == "Mentor") {
       _prefs.setStringList("userDetails", [
-        uuid,
         event.data['role'],
+        uuid,
         event.data['name'],
         event.data['phone'],
         event.data['email'],
@@ -57,8 +58,8 @@ class RegistrationBloc extends Bloc<RegistrationBlocEvent, RegistrationState> {
       ]);
       _prefs.setBool('loggedIn', true);
       await users.add({
-        'uuid': uuid,
         'role': event.data['role'],
+        'uuid': uuid,
         'name': event.data['name'],
         'phone': event.data['phone'],
         'email': event.data['email'],
@@ -75,8 +76,8 @@ class RegistrationBloc extends Bloc<RegistrationBlocEvent, RegistrationState> {
 
     if (event.role == "Investor") {
       _prefs.setStringList("userDetails", [
-        uuid,
         event.data['role'],
+        uuid,
         event.data['name'],
         event.data['phone'],
         event.data['email'],
@@ -87,8 +88,8 @@ class RegistrationBloc extends Bloc<RegistrationBlocEvent, RegistrationState> {
       _prefs.setBool('loggedIn', true);
 
       await users.add({
-        'uuid': uuid,
         'role': event.data['role'],
+        'uuid': uuid,
         'name': event.data['name'],
         'phone': event.data['phone'],
         'email': event.data['email'],
@@ -107,18 +108,18 @@ class RegistrationBloc extends Bloc<RegistrationBlocEvent, RegistrationState> {
 
     if (event.role == "Student") {
       _prefs.setStringList("userDetails", [
-        uuid,
         event.data['role'],
         event.data['name'],
         event.data['phone'],
         event.data['email'],
         event.data['address'],
-        event.data['class']
+        event.data['class'],
+        uuid,
       ]);
       _prefs.setBool('loggedIn', true);
       await users.add({
-        'uuid': uuid,
         'role': event.data['role'],
+        'uuid': uuid,
         'name': event.data['name'],
         'phone': event.data['phone'],
         'email': event.data['email'],

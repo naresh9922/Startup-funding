@@ -11,6 +11,7 @@ class RegistrationFormWidgets {
             border: const OutlineInputBorder(),
             labelText: labeltext,
           ),
+          enableSuggestions: true,
           controller: controller,
           keyboardType: textInputType,
           validator: (value) {

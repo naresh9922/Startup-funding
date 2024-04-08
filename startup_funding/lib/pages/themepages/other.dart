@@ -1,19 +1,72 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Other extends StatefulWidget {
-  const Other({super.key});
+  const Other({Key? key}) : super(key: key);
 
   @override
-  State<Other> createState() => _OtherState();
+  State<Other> createState() => _TechnologyThemePageState();
 }
 
-class _OtherState extends State<Other> {
+class _TechnologyThemePageState extends State<Other> {
+  late Future<List<DocumentSnapshot>> ideasFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    ideasFuture = getIdeas();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(" Other"),
+        title: const Text("Other"),
+      ),
+      body: FutureBuilder<List<DocumentSnapshot>>(
+        future: ideasFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else if (snapshot.data!.isEmpty) {
+            return const Center(
+              child: Text('No Data'),
+            );
+          } else {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                var idea =
+                    snapshot.data![index].data()! as Map<String, dynamic>;
+                return ListTile(
+                  title: Text(
+                    idea['ideaName'] as String, // Explicitly cast to String
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text('Description: ${idea['description']}'),
+                  onTap: () {
+                    // Handle onTap if needed
+                  },
+                );
+              },
+            );
+          }
+        },
       ),
     );
+  }
+
+  Future<List<DocumentSnapshot>> getIdeas() async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('ideas')
+        .where('theme', isEqualTo: 'Other')
+        .get();
+    return querySnapshot.docs;
   }
 }

@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:startup_funding/pages/home.dart';
 import 'package:uuid/uuid.dart';
 
 class CreateIdeaTab extends StatefulWidget {
@@ -66,7 +68,7 @@ class _CreateIdeaTabState extends State<CreateIdeaTab> {
                   margin: const EdgeInsets.only(bottom: 8),
                   child: TextFormField(
                     controller: _partnersController,
-                    keyboardType: TextInputType.text,
+                    keyboardType: TextInputType.number,
                     validator: (value) => value == null || value.isEmpty
                         ? 'Enter Partners '
                         : null,
@@ -85,7 +87,7 @@ class _CreateIdeaTabState extends State<CreateIdeaTab> {
                       'Technology',
                       'Health & Wellness',
                       'Education',
-                      'Food ',
+                      'Food',
                       'Finance',
                       'Other'
                     ].map<DropdownMenuItem<String>>((String value) {
@@ -105,7 +107,7 @@ class _CreateIdeaTabState extends State<CreateIdeaTab> {
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (String? value) {
-                      selectedTheme = value!;
+                      selectedTheme = value!.trim();
                     },
                   ),
                 ),
@@ -158,16 +160,26 @@ class _CreateIdeaTabState extends State<CreateIdeaTab> {
   Future<void> createIdea() async {
     CollectionReference idea = FirebaseFirestore.instance.collection('ideas');
     var uuid = const Uuid().v1();
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    var userUUID = await _prefs.getString('userUUID');
     try {
       await idea.add({
         'uuid': uuid,
+        'userUUID': userUUID,
         'ideaName': _ideaNameController.text,
         'problemStatement': _problemStatementController.text,
         'partners': _problemStatementController.text,
-        'theme': selectedTheme,
+        'theme': selectedTheme!.trim(),
         'description': _descriptionController.text
       }).then((value) {
         debugPrint("Idea Added ");
+        Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Home(),
+          ),
+        );
       }).catchError((error) {
         debugPrint("Failed : $error");
         return error;

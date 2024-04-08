@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:startup_funding/pages/home.dart';
 import 'package:startup_funding/widgets/registration_form_widgets.dart';
 
 import '../bloc/registration_bloc/registration_bloc_bloc.dart';
@@ -96,7 +97,25 @@ class _RegistrationState extends State<Registration> {
                 _passwordController, TextInputType.text, "Please  Password "),
             BlocConsumer<RegistrationBloc, RegistrationState>(
               bloc: _registrationBloc,
-              listener: (context, state) {},
+              listener: (context, state) {
+                if (state is RegistrationSuccessState) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    // showDialog(
+                    //   context: context,
+                    //   builder: (context) => const AlertDialog(
+                    //     title: Text("Registration Completed"),
+                    //   ),
+                    // );
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Home(),
+                      ),
+                    );
+                  });
+                }
+              },
               builder: (context, state) {
                 if (state is RegistrationInitialState) {
                   return Container(
@@ -184,16 +203,7 @@ class _RegistrationState extends State<Registration> {
                 //     );
                 //   });
                 // }
-                // if (state is RegistrationSuccessState) {
-                //   WidgetsBinding.instance.addPostFrameCallback((_) {
-                //     showDialog(
-                //       context: context,
-                //       builder: (context) => const AlertDialog(
-                //         title: Text("Registration Completed"),
-                //       ),
-                //     );
-                //   });
-                // }
+
                 return const SizedBox();
               },
             ),
@@ -215,11 +225,11 @@ class _RegistrationState extends State<Registration> {
                     debugPrint("Occupation = ${_occupationController.text}");
                     _registrationBloc
                         .add(RegisterButtonClickedEventEvent(selectedRole, {
+                      "role": selectedRole,
                       "name": _nameController.text,
                       "phone": _phoneController.text,
                       "email": _emailController.text,
-                      "address": _emailController.text,
-                      "role": selectedRole,
+                      "address": _addressController.text,
                       "class": selectedClass,
                       "password": _passwordController.text,
                       "occupation": _occupationController.text,
