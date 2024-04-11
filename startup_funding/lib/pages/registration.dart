@@ -45,9 +45,9 @@ class _RegistrationState extends State<Registration> {
           child: Column(children: [
             RegistrationFormWidgets().CustomInput('Name', _nameController,
                 TextInputType.name, "Enter Full Name "),
-            RegistrationFormWidgets().CustomInput('Email', _emailController,
+            RegistrationFormWidgets().Customemail('Email', _emailController,
                 TextInputType.emailAddress, "Enter Email Address"),
-            RegistrationFormWidgets().CustomInput('Phone', _phoneController,
+            RegistrationFormWidgets().Customphone('Phone', _phoneController,
                 TextInputType.phone, "Enter Phone Number"),
             Container(
               margin:
@@ -100,12 +100,6 @@ class _RegistrationState extends State<Registration> {
               listener: (context, state) {
                 if (state is RegistrationSuccessState) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
-                    // showDialog(
-                    //   context: context,
-                    //   builder: (context) => const AlertDialog(
-                    //     title: Text("Registration Completed"),
-                    //   ),
-                    // );
                     Navigator.pop(context);
                     Navigator.push(
                       context,
@@ -160,13 +154,7 @@ class _RegistrationState extends State<Registration> {
                     ),
                   ]);
                 }
-                // if (state is MentorRegistrationFormState) {
-                //   return Container(
-                //     child: const Center(
-                //       child: Text("Mentor Form "),
-                //     ),
-                //   );
-                // }
+
                 if (state is InvestorRegistrationFormState) {
                   return Column(
                     children: [
@@ -193,16 +181,6 @@ class _RegistrationState extends State<Registration> {
                     title: Text("Something went Wrong !!! "),
                   );
                 }
-                // if (state is RegistrationInProgressState) {
-                //   WidgetsBinding.instance.addPostFrameCallback((_) {
-                //     showDialog(
-                //       context: context,
-                //       builder: (context) => const AlertDialog(
-                //         title: Text("Loading"),
-                //       ),
-                //     );
-                //   });
-                // }
 
                 return const SizedBox();
               },

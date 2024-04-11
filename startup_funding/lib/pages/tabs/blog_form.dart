@@ -33,6 +33,12 @@ class _BlogFormState extends State<BlogForm> {
                   labelText: 'Title',
                   border: OutlineInputBorder(),
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a title';
+                  }
+                  return null; // Return null if the input is valid
+                },
               ),
               const SizedBox(height: 20),
               TextFormField(
@@ -43,11 +49,26 @@ class _BlogFormState extends State<BlogForm> {
                   labelText: 'Content',
                   border: OutlineInputBorder(),
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a title';
+                  }
+                  return null; // Return null if the input is valid
+                },
               ),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: createBlog,
-                child: const Text('Publish'),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.purple),
+                ),
+                child: Text(
+                  'Publish',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
+                  ),
+                ),
               ),
             ],
           ),
