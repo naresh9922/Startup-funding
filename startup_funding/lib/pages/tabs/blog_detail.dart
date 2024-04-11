@@ -1,34 +1,59 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../model/blog.dart';
 
-class BlogDetailsScreen extends StatelessWidget {
-  final BlogPost blogPost;
+class BlogDetailsScreen extends StatefulWidget {
+  final String title;
+  final String date;
+  final String description;
 
-  BlogDetailsScreen(this.blogPost);
+  BlogDetailsScreen({
+    required this.title,
+    required this.date,
+    required this.description,
+  });
 
+  @override
+  State<BlogDetailsScreen> createState() => _BlogDetailsScreenState();
+}
+
+class _BlogDetailsScreenState extends State<BlogDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          blogPost.title,
-        ),
+        title: const Text(''),
       ),
       body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                blogPost.title,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            Container(
+              color: Colors.blue[100],
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  widget.title,
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
+            Container(
+              child: Padding(
+                padding: EdgeInsets.only(left: 8.0),
+                child: Text(
+                  widget.date,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            Divider(), // Add a divider between date and description
             Padding(
               padding: EdgeInsets.all(8.0),
-              child: Text(blogPost.fullContent),
+              child: Text(widget.description),
             ),
           ],
         ),
