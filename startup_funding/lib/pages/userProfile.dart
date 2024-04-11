@@ -39,10 +39,9 @@ class _UserProfileState extends State<UserProfile> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CircleAvatar(
+              const CircleAvatar(
                 radius: 50,
-                backgroundColor: Colors.grey,
-                // You can add an image here if available
+                backgroundImage: AssetImage('assets/profile.jpeg'),
               ),
               const SizedBox(height: 20),
               _isEditing
@@ -58,9 +57,15 @@ class _UserProfileState extends State<UserProfile> {
                       "Email:", _email, (value) => _email = value)
                   : _buildProfileInfo("Email:", _email),
               _isEditing
-                  ? _buildEditableProfileInfo(
-                      "Address:", _address, (value) => _address = value)
-                  : _buildProfileInfo("Address:", _address),
+                  ? Visibility(
+                      visible: _role == 'Investor' || _role == 'Student',
+                      child: _buildEditableProfileInfo(
+                          "Address:", _address, (value) => _address = value),
+                    )
+                  : Visibility(
+                      visible: _role == 'Investor' || _role == 'Student',
+                      child: _buildProfileInfo("Address:", _address),
+                    ),
               _isEditing
                   ? Visibility(
                       visible: _role == 'Student',
@@ -91,10 +96,11 @@ class _UserProfileState extends State<UserProfile> {
                       visible: _role == 'Investor',
                       child: _buildProfileInfo("Experience :", _experience),
                     ),
-              if (_isEditing) SizedBox(height: 20),
+              if (_isEditing) const SizedBox(height: 20),
               if (_isEditing)
-                ElevatedButton(onPressed: _saveChanges, child: Text("Save")),
-              if (!_isEditing) SizedBox(height: 20),
+                ElevatedButton(
+                    onPressed: _saveChanges, child: const Text("Save")),
+              if (!_isEditing) const SizedBox(height: 20),
               ElevatedButton(
                   onPressed: _toggleEditing,
                   child: Text(_isEditing ? "Cancel" : "Edit")),
@@ -113,16 +119,16 @@ class _UserProfileState extends State<UserProfile> {
         children: [
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(width: 25),
+          const SizedBox(width: 25),
           Expanded(
             child: Text(
               value,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 18,
               ),
               textAlign: TextAlign.left,
@@ -142,12 +148,12 @@ class _UserProfileState extends State<UserProfile> {
         children: [
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(width: 25),
+          const SizedBox(width: 25),
           Expanded(
             child: TextFormField(
               initialValue: value,
@@ -202,8 +208,9 @@ class _UserProfileState extends State<UserProfile> {
     List<String> userDetails = [_name, _phone, _email, _class, _address];
     _prefs.setStringList('userDetails', userDetails);
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Changes saved successfully')),
+      const SnackBar(content: Text('Changes saved successfully')),
     );
+
     _toggleEditing();
   }
 }

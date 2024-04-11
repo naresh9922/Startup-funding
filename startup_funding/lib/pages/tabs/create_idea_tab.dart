@@ -168,11 +168,16 @@ class _CreateIdeaTabState extends State<CreateIdeaTab> {
         'userUUID': userUUID,
         'ideaName': _ideaNameController.text,
         'problemStatement': _problemStatementController.text,
-        'partners': _problemStatementController.text,
+        'partners': _partnersController.text,
         'theme': selectedTheme!.trim(),
         'description': _descriptionController.text
       }).then((value) {
         debugPrint("Idea Added ");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Idea registered successfully'),
+          ),
+        );
         Navigator.pop(context);
         Navigator.push(
           context,

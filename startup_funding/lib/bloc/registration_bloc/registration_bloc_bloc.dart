@@ -52,7 +52,6 @@ class RegistrationBloc extends Bloc<RegistrationBlocEvent, RegistrationState> {
         event.data['name'],
         event.data['phone'],
         event.data['email'],
-        event.data['address'],
         event.data['role'],
         uuid,
       ]);
@@ -63,7 +62,6 @@ class RegistrationBloc extends Bloc<RegistrationBlocEvent, RegistrationState> {
         'name': event.data['name'],
         'phone': event.data['phone'],
         'email': event.data['email'],
-        'address': event.data['address'],
         'password': event.data['password']
       }).then((value) {
         debugPrint(" ${event.role} Added ");

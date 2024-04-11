@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:startup_funding/pages/login.dart';
 import 'package:startup_funding/pages/tabs/blog.dart';
+import 'package:startup_funding/pages/tabs/blog_form.dart';
 import 'package:startup_funding/pages/tabs/create_idea_tab.dart';
 import 'package:startup_funding/pages/userProfile.dart';
 import '../widgets/reg_widgets.dart';
@@ -70,7 +71,7 @@ class _HomeState extends State<Home> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const BlogTab(),
+                    builder: (context) => BlogTab(),
                   ),
                 );
               }
@@ -79,6 +80,14 @@ class _HomeState extends State<Home> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => const CreateIdeaTab(),
+                  ),
+                );
+              }
+              if (value == "Write blog") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const BlogForm(),
                   ),
                 );
               }
@@ -183,8 +192,8 @@ class _HomeState extends State<Home> {
       _options = {'Blog'};
     } else if (profile == "Student") {
       _options = {'Blog', 'Create Idea'};
-    } else {
-      _options = {'Blog', 'Write blog'};
+    } else if (profile == "Mentor") {
+      _options = {'Blog', "Write blog"};
     }
   }
 }

@@ -19,12 +19,6 @@ class BlogDetailsScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Animate(
-              effects: const [FadeEffect(), ScaleEffect()],
-              child: Image.network(
-                blogPost.imageUrl,
-              ),
-            ),
             Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(

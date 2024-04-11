@@ -22,7 +22,7 @@ class _TechnologyThemePageState extends State<TechnologyThemePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Technology"),
+        title: const Text("Technology StartUps"),
       ),
       body: FutureBuilder<List<DocumentSnapshot>>(
         future: ideasFuture,
@@ -53,17 +53,18 @@ class _TechnologyThemePageState extends State<TechnologyThemePage> {
               itemBuilder: (context, index) {
                 var idea =
                     snapshot.data![index].data()! as Map<String, dynamic>;
-                return ListTile(
-                  title: Text(
-                    idea['ideaName'] as String? ?? 'Unnamed Idea',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text(
-                      'Description: ${idea['description'] ?? 'No description'}'),
-                  // trailing: IconButton(
-                  //     onPressed: () {}, icon: const Icon(Icons.interests)),
-                  onTap: () async {
-                    Navigator.push(
+                return Card(
+                  color: Colors.grey[200], // Set background color to grey 200
+                  child: ListTile(
+                    title: Text(
+                      idea['ideaName'] as String? ?? 'Unnamed Idea',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(
+                      'Problem Statement: ${idea['problemStatement'] ?? 'No description'}',
+                    ),
+                    onTap: () async {
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => IdeaDetailsPage(
@@ -75,8 +76,10 @@ class _TechnologyThemePageState extends State<TechnologyThemePage> {
                             userUUID: idea['userUUID'],
                             uuid: idea['uuid'],
                           ),
-                        ));
-                  },
+                        ),
+                      );
+                    },
+                  ),
                 );
               },
             );

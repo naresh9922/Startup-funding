@@ -29,13 +29,21 @@ class _TechnologyThemePageState extends State<HealthAndWellness> {
         future: ideasFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
+            return Center(
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
+            // Specific error handling
+            if (snapshot.error is FirebaseException) {
+              FirebaseException error = snapshot.error as FirebaseException;
+              return Center(
+                child: Text('Firestore Error: ${error.message}'),
+              );
+            } else {
+              return Center(
+                child: Text('Error: ${snapshot.error}'),
+              );
+            }
           } else if (snapshot.data!.isEmpty) {
             return const Center(
               child: Text('No Data'),
@@ -46,14 +54,18 @@ class _TechnologyThemePageState extends State<HealthAndWellness> {
               itemBuilder: (context, index) {
                 var idea =
                     snapshot.data![index].data()! as Map<String, dynamic>;
-                return ListTile(
-                  title: Text(
-                    idea['ideaName'] as String, // Explicitly cast to String
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text('Description: ${idea['description']}'),
-                  onTap: () {
-                    Navigator.push(
+                return Card(
+                  color: Colors.grey[200], // Set background color to grey 200
+                  child: ListTile(
+                    title: Text(
+                      idea['ideaName'] as String? ?? 'Unnamed Idea',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(
+                      'Problem Statement: ${idea['problemStatement'] ?? 'No description'}',
+                    ),
+                    onTap: () async {
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => IdeaDetailsPage(
@@ -65,8 +77,10 @@ class _TechnologyThemePageState extends State<HealthAndWellness> {
                             userUUID: idea['userUUID'],
                             uuid: idea['uuid'],
                           ),
-                        ));
-                  },
+                        ),
+                      );
+                    },
+                  ),
                 );
               },
             );
