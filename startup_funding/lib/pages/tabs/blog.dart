@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../../model/blog.dart';
 import 'blog_detail.dart';
 
 class BlogTab extends StatefulWidget {

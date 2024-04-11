@@ -1,9 +1,4 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-
-import '../../model/blog.dart';
 
 class BlogDetailsScreen extends StatefulWidget {
   final String title;
