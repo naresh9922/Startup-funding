@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProfile extends StatefulWidget {
@@ -22,6 +23,7 @@ class _UserProfileState extends State<UserProfile> {
   String _address = "";
   String _email = "";
   String _class = "";
+  String _role = "";
   String _experience = "";
   String _occupation = "";
 
@@ -57,12 +59,38 @@ class _UserProfileState extends State<UserProfile> {
                   : _buildProfileInfo("Email:", _email),
               _isEditing
                   ? _buildEditableProfileInfo(
-                      "Class:", _class, (value) => _class = value)
-                  : _buildProfileInfo("Class:", _class),
-              _isEditing
-                  ? _buildEditableProfileInfo(
                       "Address:", _address, (value) => _address = value)
                   : _buildProfileInfo("Address:", _address),
+              _isEditing
+                  ? Visibility(
+                      visible: _role == 'Student',
+                      child: _buildEditableProfileInfo(
+                          "Class:", _class, (value) => _class = value),
+                    )
+                  : Visibility(
+                      visible: _role == 'Student',
+                      child: _buildProfileInfo("Class:", _class),
+                    ),
+              _isEditing
+                  ? Visibility(
+                      visible: _role == 'Investor',
+                      child: _buildEditableProfileInfo("Occupation:",
+                          _occupation, (value) => _occupation = value),
+                    )
+                  : Visibility(
+                      visible: _role == 'Investor',
+                      child: _buildProfileInfo("Occupation :", _occupation),
+                    ),
+              _isEditing
+                  ? Visibility(
+                      visible: _role == 'Investor',
+                      child: _buildEditableProfileInfo("Experience:",
+                          _experience, (value) => _experience = value),
+                    )
+                  : Visibility(
+                      visible: _role == 'Investor',
+                      child: _buildProfileInfo("Experience :", _experience),
+                    ),
               if (_isEditing) SizedBox(height: 20),
               if (_isEditing)
                 ElevatedButton(onPressed: _saveChanges, child: Text("Save")),
@@ -134,14 +162,32 @@ class _UserProfileState extends State<UserProfile> {
   Future<void> getPreferences() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     List<String>? userData = _prefs.getStringList('userDetails');
+    String? profile = await _prefs.getString('profile');
     debugPrint("${userData!.length}");
 
     setState(() {
-      _name = userData[0];
-      _phone = userData[1];
-      _email = userData[2];
-      _class = userData[3];
-      _address = userData[4];
+      _role = profile!;
+      if (profile == 'Investor') {
+        _name = userData[0];
+        _phone = userData[1];
+        _email = userData[2];
+        _address = userData[3];
+        _occupation = userData[4];
+        _experience = userData[5];
+      }
+      if (profile == 'Mentor') {
+        _name = userData[0];
+        _phone = userData[1];
+        _email = userData[2];
+        _address = userData[3];
+      }
+      if (profile == 'Student') {
+        _name = userData[0];
+        _phone = userData[1];
+        _email = userData[2];
+        _address = userData[3];
+        _class = userData[4];
+      }
     });
   }
 
@@ -151,10 +197,13 @@ class _UserProfileState extends State<UserProfile> {
     });
   }
 
-  void _saveChanges() {
-    // Save changes to the database (use Firebase or any other method)
-    // Once saved, you might want to notify the user that changes are saved.
-    // After saving, exit the edit mode.
+  void _saveChanges() async {
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    List<String> userDetails = [_name, _phone, _email, _class, _address];
+    _prefs.setStringList('userDetails', userDetails);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Changes saved successfully')),
+    );
     _toggleEditing();
   }
 }

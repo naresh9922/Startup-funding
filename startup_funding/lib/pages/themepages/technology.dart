@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:startup_funding/pages/idea_info.dart';
 
 class TechnologyThemePage extends StatefulWidget {
   const TechnologyThemePage({Key? key}) : super(key: key);
@@ -59,24 +60,22 @@ class _TechnologyThemePageState extends State<TechnologyThemePage> {
                   ),
                   subtitle: Text(
                       'Description: ${idea['description'] ?? 'No description'}'),
-                  trailing: IconButton(
-                      onPressed: () {}, icon: const Icon(Icons.interests)),
+                  // trailing: IconButton(
+                  //     onPressed: () {}, icon: const Icon(Icons.interests)),
                   onTap: () async {
-                    QuerySnapshot<Map<String, dynamic>> documentSnapshot =
-                        await FirebaseFirestore.instance
-                            .collection('users')
-                            .where('uuid', isEqualTo: idea['userUUID'])
-                            .get();
-                    List<String> documentIds =
-                        documentSnapshot.docs.map((doc) => doc.id).toList();
-
-                    // Check if documentIds list is not empty before accessing its elements
-                    if (documentIds.isNotEmpty) {
-                      print(documentSnapshot.docs[0]['email']);
-                      print(documentIds[0]);
-                    } else {
-                      print('No user found for this idea.');
-                    }
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => IdeaDetailsPage(
+                            description: idea['description'],
+                            ideaName: idea['ideaName'],
+                            partners: idea['partners'],
+                            problemStatement: idea['problemStatement'],
+                            theme: idea['theme'],
+                            userUUID: idea['userUUID'],
+                            uuid: idea['uuid'],
+                          ),
+                        ));
                   },
                 );
               },

@@ -19,6 +19,12 @@ class RegistrationWidgets {
     'Others'
   ];
 
+  static List<String> img = [
+    "assets/img1.jpeg",
+    "assets/img2.jpeg",
+    "assets/img3.jpeg"
+  ];
+
   static Widget AdsCarousel() {
     return Container(
       padding: const EdgeInsets.all(8.0),
@@ -36,24 +42,21 @@ class RegistrationWidgets {
       ),
       child: CarouselSlider(
         options: CarouselOptions(height: 180, autoPlay: true),
-        items: [1, 2, 3].map((i) {
+        items: [0, 1, 2].map((i) {
           return Builder(
             builder: (BuildContext context) {
               return Container(
                 width: MediaQuery.of(context).size.width,
                 margin: const EdgeInsets.symmetric(horizontal: 5.0),
                 decoration: const BoxDecoration(
-                  color: Colors.grey,
+                  color: Colors.white,
                   borderRadius: BorderRadius.all(
                     Radius.circular(10),
                   ),
                 ),
-                child: Text(
-                  'text $i',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 16.0,
-                  ),
+                child: Image.asset(
+                  img[i],
+                  fit: BoxFit.cover,
                 ),
               );
             },
@@ -78,7 +81,8 @@ class RegistrationWidgets {
         Container(
           color: Colors.grey[200],
           child: Card(
-            elevation: 5,
+            color: Colors.grey[200],
+            elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
@@ -120,7 +124,7 @@ class RegistrationWidgets {
                       Icon(Icons.email),
                       SizedBox(width: 8),
                       Text(
-                        "Email: milkeasy1234@gmail.com",
+                        "Email: investingHub@gmail.com",
                         style: TextStyle(color: Colors.grey[700]),
                       ),
                     ],
@@ -128,20 +132,7 @@ class RegistrationWidgets {
                   SizedBox(height: 16),
                   Row(
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          _openUrl('https://www.facebook.com/');
-                        },
-                        child: Icon(Icons.facebook),
-                      ),
-                      SizedBox(width: 16),
-                      GestureDetector(
-                        onTap: () {
-                          _openUrl('https://www.instagram.com/');
-                        },
-                        child: Icon(Icons.facebook, color: Colors.pink),
-                      ),
-                      SizedBox(width: 16),
+                      SizedBox(width: 0),
                       GestureDetector(
                         onTap: () {
                           _openUrl('https://www.twitter.com/');

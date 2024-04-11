@@ -49,12 +49,12 @@ class RegistrationBloc extends Bloc<RegistrationBlocEvent, RegistrationState> {
     _prefs.setString('profile', event.role);
     if (event.role == "Mentor") {
       _prefs.setStringList("userDetails", [
-        event.data['role'],
-        uuid,
         event.data['name'],
         event.data['phone'],
         event.data['email'],
-        event.data['address']
+        event.data['address'],
+        event.data['role'],
+        uuid,
       ]);
       _prefs.setBool('loggedIn', true);
       await users.add({
@@ -76,14 +76,14 @@ class RegistrationBloc extends Bloc<RegistrationBlocEvent, RegistrationState> {
 
     if (event.role == "Investor") {
       _prefs.setStringList("userDetails", [
-        event.data['role'],
-        uuid,
         event.data['name'],
         event.data['phone'],
         event.data['email'],
         event.data['address'],
         event.data['occupation'],
-        event.data['experience']
+        event.data['experience'],
+        event.data['role'],
+        uuid,
       ]);
       _prefs.setBool('loggedIn', true);
 
@@ -108,12 +108,12 @@ class RegistrationBloc extends Bloc<RegistrationBlocEvent, RegistrationState> {
 
     if (event.role == "Student") {
       _prefs.setStringList("userDetails", [
-        event.data['role'],
         event.data['name'],
         event.data['phone'],
         event.data['email'],
         event.data['address'],
         event.data['class'],
+        event.data['role'],
         uuid,
       ]);
       _prefs.setBool('loggedIn', true);

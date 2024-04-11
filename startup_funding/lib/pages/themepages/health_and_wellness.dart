@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../idea_info.dart';
+
 class HealthAndWellness extends StatefulWidget {
   const HealthAndWellness({Key? key}) : super(key: key);
 
@@ -51,7 +53,19 @@ class _TechnologyThemePageState extends State<HealthAndWellness> {
                   ),
                   subtitle: Text('Description: ${idea['description']}'),
                   onTap: () {
-                    // Handle onTap if needed
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => IdeaDetailsPage(
+                            description: idea['description'],
+                            ideaName: idea['ideaName'],
+                            partners: idea['partners'],
+                            problemStatement: idea['problemStatement'],
+                            theme: idea['theme'],
+                            userUUID: idea['userUUID'],
+                            uuid: idea['uuid'],
+                          ),
+                        ));
                   },
                 );
               },

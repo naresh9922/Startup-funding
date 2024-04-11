@@ -225,8 +225,8 @@ class _LoginState extends State<Login> {
             data['name'],
             data['phone'],
             data['email'],
-            data['class'],
             data['address'],
+            data['class'],
             data['uuid'],
           ]);
         }

@@ -184,7 +184,7 @@ class _HomeState extends State<Home> {
     } else if (profile == "Student") {
       _options = {'Blog', 'Create Idea'};
     } else {
-      _options = {'Blog'};
+      _options = {'Blog', 'Write blog'};
     }
   }
 }
