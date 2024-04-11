@@ -38,9 +38,18 @@ class _BlogTabState extends State<BlogTab> {
               return Card(
                 color: Colors.grey[200],
                 child: ListTile(
-                  title: Text(blogData['title'] ?? 'No Title'),
+                  title: Text(
+                    blogData['title'] ?? 'No Title',
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.brown), // Custom font size and color
+                  ),
                   subtitle: Text(
-                      blogData['date'] ?? 'No Date'), // Added subtitle for date
+                    blogData['date'] ?? 'No Date',
+                    style: TextStyle(
+                      fontSize: 11,
+                    ),
+                  ), // Added subtitle for date
                   onTap: () async {
                     Navigator.push(
                       context,
