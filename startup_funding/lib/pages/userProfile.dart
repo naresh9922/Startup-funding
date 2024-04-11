@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({Key? key}) : super(key: key);
@@ -14,8 +13,8 @@ class _UserProfileState extends State<UserProfile> {
 
   @override
   void initState() {
-    super.initState();
     getPreferences();
+    super.initState();
   }
 
   String _name = "";
@@ -23,6 +22,8 @@ class _UserProfileState extends State<UserProfile> {
   String _address = "";
   String _email = "";
   String _class = "";
+  String _experience = "";
+  String _occupation = "";
 
   @override
   Widget build(BuildContext context) {
@@ -133,13 +134,14 @@ class _UserProfileState extends State<UserProfile> {
   Future<void> getPreferences() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     List<String>? userData = _prefs.getStringList('userDetails');
+    debugPrint("${userData!.length}");
 
     setState(() {
-      _name = userData?[0] ?? "";
-      _phone = userData?[1] ?? "";
-      _email = userData?[2] ?? "";
-      _class = userData?[3] ?? "";
-      _address = userData?[4] ?? "";
+      _name = userData[0];
+      _phone = userData[1];
+      _email = userData[2];
+      _class = userData[3];
+      _address = userData[4];
     });
   }
 
@@ -149,43 +151,10 @@ class _UserProfileState extends State<UserProfile> {
     });
   }
 
-  void _saveChanges() async {
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-    try {
-      // Check if the email is not empty
-      if (_email.isNotEmpty) {
-        // Get the document reference using the email as the document ID
-        DocumentReference userRef = firestore.collection('users').doc(_email);
-
-        // Check if the document exists before updating
-        DocumentSnapshot docSnapshot = await userRef.get();
-        if (docSnapshot.exists) {
-          // Update the document with new data
-          await userRef.update({
-            'name': _name,
-            'phone': _phone,
-            'class': _class,
-            'address': _address,
-          });
-
-          // Notify the user that changes are saved (you can use a snackbar or any other UI element for this)
-
-          _toggleEditing();
-        } else {
-          // Handle the case when the document doesn't exist
-          print('Document with email $_email does not exist');
-          // You can choose to create a new document instead of updating
-          // or display an error message to the user
-        }
-      } else {
-        // Handle the case when the email is empty
-        print('Email is empty');
-        // You can prompt the user to provide their email or handle it as needed
-      }
-    } catch (e) {
-      // Handle errors, for example, show an error message to the user
-      print('Error saving changes: $e');
-    }
+  void _saveChanges() {
+    // Save changes to the database (use Firebase or any other method)
+    // Once saved, you might want to notify the user that changes are saved.
+    // After saving, exit the edit mode.
+    _toggleEditing();
   }
 }
