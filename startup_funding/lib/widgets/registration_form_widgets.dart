@@ -59,7 +59,7 @@ class RegistrationFormWidgets {
           ),
           enableSuggestions: true,
           controller: controller,
-          keyboardType: TextInputType.phone,
+          keyboardType: TextInputType.emailAddress,
           validator: (value) {
             if (value == null || value.isEmpty) {
               return validatorText;

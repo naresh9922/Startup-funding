@@ -184,14 +184,16 @@ class _LoginState extends State<Login> {
                       child: Text('Forgot your login details? '),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 1.0),
+                      padding: const EdgeInsets.only(left: 62),
                       child: InkWell(
                         onTap: () {
                           print('hello');
                         },
                         child: const Text(
-                          'Get help logging in.',
-                          style: TextStyle(fontSize: 14, color: Colors.blue),
+                          'email to "abc@gmail.com"',
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
                         ),
                       ),
                     )

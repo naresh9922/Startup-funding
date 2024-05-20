@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({Key? key}) : super(key: key);
@@ -43,11 +44,17 @@ class _UserProfileState extends State<UserProfile> {
                 radius: 50,
                 backgroundImage: AssetImage('assets/profile.jpeg'),
               ),
-              const SizedBox(height: 20),
-              _isEditing
-                  ? _buildEditableProfileInfo(
-                      "Name:", _name, (value) => _name = value)
-                  : _buildProfileInfo("Name:", _name),
+              const SizedBox(height: 0),
+              Text(
+                " $_name",
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(
+                height: 30,
+              ),
               _isEditing
                   ? _buildEditableProfileInfo(
                       "Phone:", _phone, (value) => _phone = value)
@@ -84,7 +91,7 @@ class _UserProfileState extends State<UserProfile> {
                     )
                   : Visibility(
                       visible: _role == 'Investor',
-                      child: _buildProfileInfo("Occupation :", _occupation),
+                      child: _buildProfileInfo("Occupation:", _occupation),
                     ),
               _isEditing
                   ? Visibility(
@@ -94,7 +101,7 @@ class _UserProfileState extends State<UserProfile> {
                     )
                   : Visibility(
                       visible: _role == 'Investor',
-                      child: _buildProfileInfo("Experience :", _experience),
+                      child: _buildProfileInfo("Experience:", _experience),
                     ),
               if (_isEditing) const SizedBox(height: 20),
               if (_isEditing)
@@ -154,12 +161,25 @@ class _UserProfileState extends State<UserProfile> {
             ),
           ),
           const SizedBox(width: 25),
-          Expanded(
-            child: TextFormField(
-              initialValue: value,
-              onChanged: onChanged,
+          // Render TextFormField only if the title is not "Name"
+          if (title != "Name")
+            Expanded(
+              child: TextFormField(
+                initialValue: value,
+                onChanged: onChanged,
+              ),
             ),
-          ),
+          // Render a non-editable text widget for "Name"
+          if (title == "Name")
+            Expanded(
+              child: Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 18,
+                ),
+                textAlign: TextAlign.left,
+              ),
+            ),
         ],
       ),
     );
@@ -192,12 +212,33 @@ class _UserProfileState extends State<UserProfile> {
         _phone = userData[1];
         _email = userData[2];
         _address = userData[3];
-        _class = userData[4];
+        _class = userData.length > 4
+            ? userData[4]
+            : ""; // Check if _class exists before accessing it
       }
     });
   }
 
-  void _toggleEditing() {
+  void _toggleEditing() async {
+    if (!_isEditing) {
+      try {
+        final snapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .where('name', isEqualTo: _name)
+            .get();
+
+        if (snapshot.docs.isNotEmpty) {
+          final userData = snapshot.docs.first.data();
+          // Print the user data from Firestore
+          print(userData);
+        } else {
+          print('User not found in Firestore');
+        }
+      } catch (e) {
+        print('Error fetching user data: $e');
+      }
+    }
+
     setState(() {
       _isEditing = !_isEditing;
     });
@@ -206,7 +247,16 @@ class _UserProfileState extends State<UserProfile> {
   void _saveChanges() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     List<String> userDetails = [_name, _phone, _email, _class, _address];
-    _prefs.setStringList('userDetails', userDetails);
+
+    // Check if the userDetails key exists in SharedPreferences
+    if (_prefs.containsKey('userDetails')) {
+      // If it exists, replace the existing data
+      _prefs.setStringList('userDetails', userDetails);
+    } else {
+      // If it doesn't exist, add the new data
+      _prefs.setStringList('userDetails', userDetails);
+    }
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Changes saved successfully')),
     );
